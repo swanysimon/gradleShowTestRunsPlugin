@@ -13,9 +13,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        greeting {
-            id = "com.github.showTestRuns.greeting"
-            implementationClass = "com.github.showTestRuns.GradleShowTestRunsPluginPlugin"
+        showTestRuns {
+            id = "com.github.show-test-runs"
+            implementationClass = "com.github.showTestRuns.ShowTestRunsPlugin"
         }
     }
 }
