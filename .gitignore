@@ -1,0 +1,52 @@
+# This gitignore file was generated from the following:
+#   - Eclipse https://raw.githubusercontent.com/github/gitignore/master/Global/Eclipse.gitignore
+#   - Gradle: https://raw.githubusercontent.com/github/gitignore/master/Gradle.gitignore
+#   - JetBrains: https://raw.githubusercontent.com/github/gitignore/master/Global/JetBrains.gitignore
+# The contents of the file were then reverse sorted and all comments and empty lines removed.
+# Additional changes:
+#   - Change all `.idea/...`  to simply `.idea/*`
+#   - Change `/build/` to `build/*`
+#   - Add `*` to the end of all directory paths
+tmp/
+out/
+local.properties
+gradle-app.setting
+fabric.properties
+crashlytics.properties
+crashlytics-build.properties
+com_crashlytics_export_strings.xml
+cmake-build-*/*
+build/*
+bin/*
+atlassian-ide-plugin.xml
+.worksheet
+.texlipse
+.tern-project
+.target
+.springBeans
+.settings/*
+.scala_dependencies
+.recommenders/*
+.recommenders
+.metadata
+.loadpath
+.idea_modules/*
+.idea/*
+.gradletasknamecache
+.gradle
+.factorypath
+.externalToolBuilders/*
+.cproject
+.cache-main
+.buildpath
+.autotools
+.apt_generated_test/*
+.apt_generated/*
+*~.nib
+*.tmp
+*.swp
+*.pydevproject
+*.launch
+*.iws
+*.bak
+!gradle-wrapper.jar

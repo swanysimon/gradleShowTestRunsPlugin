@@ -1,0 +1,38 @@
+plugins {
+    id "java-gradle-plugin"
+    id "groovy"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testImplementation "org.spockframework:spock-core:1.3-groovy-2.5"
+}
+
+gradlePlugin {
+    plugins {
+        greeting {
+            id = "com.github.showTestRuns.greeting"
+            implementationClass = "com.github.showTestRuns.GradleShowTestRunsPluginPlugin"
+        }
+    }
+}
+
+sourceSets {
+    functionalTest {
+    }
+}
+
+gradlePlugin.testSourceSets(sourceSets.functionalTest)
+configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+
+task functionalTest(type: Test) {
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+check {
+    dependsOn(tasks.functionalTest)
+}
