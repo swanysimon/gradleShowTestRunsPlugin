@@ -64,11 +64,11 @@ class ShowTestRunsPluginPluginTest extends Specification {
     }
 
     private static <T> Map<LogLevel, Map<String, T>> fromTestLogging(Project project, Closure<T> transform) {
-        return LogLevel.values().collectEntries { LogLevel level -> [
-                level,
-                project.tasks.withType(Test).collectEntries { Test testTask ->
-                    [testTask.getName(), transform.call(testTask.testLogging.get(level))]
-                }
-        ]}
+        def evaluate = { LogLevel level ->
+            project.tasks.withType(Test).collectEntries {
+                [it.name, transform(it.testLogging.get(level))]
+            }
+        }
+        return LogLevel.values().collectEntries { [it, evaluate(it)] }
     }
 }
