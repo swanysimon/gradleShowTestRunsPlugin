@@ -19,20 +19,3 @@ gradlePlugin {
         }
     }
 }
-
-sourceSets {
-    functionalTest {
-    }
-}
-
-gradlePlugin.testSourceSets(sourceSets.functionalTest)
-configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
-
-task functionalTest(type: Test) {
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-}
-
-check {
-    dependsOn(tasks.functionalTest)
-}
