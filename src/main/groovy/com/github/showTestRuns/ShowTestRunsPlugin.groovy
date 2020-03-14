@@ -39,16 +39,20 @@ class PluginApplier implements Runnable {
 
     @Override
     void run() {
-        tasks.withType(Test).configureEach { Test testTask ->
-            if (config.ignore.any { ignored -> testTask.name =~ ignored }) {
-                logger.debug("Task {} found in {} ignore list. Skipping task", testTask.name, PLUGIN_NAME)
+        tasks.withType(Test).configureEach {
+            println(config.ignore)
+            if (config.ignore.any { ignored -> it.name =~ ignored }) {
+                logger.debug("Task {} found in {} ignore list. Skipping task", it.name, PLUGIN_NAME)
                 return
             }
 
-            LogLevel.values().each { level ->
-                def testLogging = testTask.testLogging.get(level)
-                testLogging.exceptionFormat = TestExceptionFormat.FULL
-                testLogging.events += TestLogEvent.FAILED
+            def testLogging = it.testLogging
+            testLogging.exceptionFormat = TestExceptionFormat.FULL
+            testLogging.events += TestLogEvent.FAILED
+
+            LogLevel.values().each {
+                testLogging.get(it).exceptionFormat = TestExceptionFormat.FULL
+                testLogging.get(it).events += TestLogEvent.FAILED
             }
         }
     }
