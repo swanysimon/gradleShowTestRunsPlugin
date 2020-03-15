@@ -1,21 +1,106 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
-    id "java-gradle-plugin"
+    id "com.gradle.plugin-publish"
     id "groovy"
+    id "java-gradle-plugin"
+    id "maven-publish"
 }
 
 repositories {
     jcenter()
 }
 
+version = "0.0.1"
+group = "com.github.show-test-runs"
+
+sourceSets {
+    functionalTest {
+        groovy.srcDir file("src/functionalTest/groovy")
+        resources.srcDir file("src/functionalTest/resources")
+        compileClasspath += sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    functionalTestImplementation.extendsFrom testImplementation
+}
+
 dependencies {
-    testImplementation "org.spockframework:spock-core:1.3-groovy-2.5"
+    compile "org.codehaus.groovy:groovy-all:2.5.10"
+    compile gradleApi()
+    compile localGroovy()
+
+    testImplementation "org.codehaus.groovy:groovy-all:2.5.10"
+    testImplementation gradleApi()
+    testImplementation gradleTestKit()
+    testImplementation localGroovy()
+    testImplementation("org.spockframework:spock-core:1.3-groovy-2.5") {
+        exclude group: "org.codehaus.groovy"
+    }
+}
+
+def functionalTestTask = tasks.register("functionalTest", Test)
+functionalTestTask.configure {
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    description = "Runs the functional tests."
+    group = "verification"
+    mustRunAfter tasks.named("test")
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+}
+
+tasks.named("check").configure { it.dependsOn functionalTestTask }
+
+tasks.withType(Test).configureEach {
+    def testLogging = it.testLogging
+    testLogging.exceptionFormat = TestExceptionFormat.FULL
+    testLogging.events += TestLogEvent.FAILED
+
+    LogLevel.values().each {
+        testLogging.get(it).exceptionFormat = TestExceptionFormat.FULL
+        testLogging.get(it).events += TestLogEvent.FAILED
+    }
+
+    it.afterSuite { TestDescriptor desc, TestResult result ->
+        // only report results for topmost module or suite
+        if (desc.parent) {
+            return
+        }
+
+        logger.lifecycle(
+                "Test Results: {} {} tests, {} passed, {} skipped, {} failed",
+                result.resultType,
+                result.testCount,
+                result.successfulTestCount,
+                result.skippedTestCount,
+                result.failedTestCount)
+    }
 }
 
 gradlePlugin {
-    plugins {
-        showTestRuns {
-            id = "com.github.show-test-runs"
-            implementationClass = "com.github.showTestRuns.ShowTestRunsPlugin"
-        }
-    }
+    testSourceSets sourceSets.functionalTest
+//    plugins {
+//        showTestRuns {
+//            id = "com.github.show-test-runs"
+//            implementationClass = "com.github.showTestRuns.ShowTestRunsPlugin"
+//        }
+//    }
 }
+
+//pluginBundle {
+//    website = "https://github.com/swanysimon/gradleShowTestRunsPlugin"
+//    vcsUrl = "https://github.com/swanysimon/gradleShowTestRunsPlugin.git"
+//    description = "Increases console output during test runs."
+//    tags = ["testing"]
+//
+//    plugins {
+//        showTestRuns {
+//            displayName = "Show Test Runs plugin"
+//        }
+//    }
+//}
+//
+//publishPlugins.onlyIf { false }
+//tasks.named("publish").configure { it.dependsOn publishPlugins }

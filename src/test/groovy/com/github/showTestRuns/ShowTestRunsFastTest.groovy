@@ -9,7 +9,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 import spock.lang.Subject
 
-class ShowTestRunsPluginPluginTest extends Specification {
+class ShowTestRunsFastTest extends Specification {
 
     @Subject
     def project = ProjectBuilder.builder().build();
