@@ -25,7 +25,7 @@ class PluginApplier implements Runnable {
     @Override
     void run() {
         tasks.withType(Test).configureEach {
-            if (config.ignore.any { ignored -> it.name =~ ignored }) {
+            if (config.ignores.any { ignored -> it.name =~ ignored }) {
                 logger.debug("Task {} found in {} ignore list. Skipping task", it.name, iiShowTestRunsPlugin.PLUGIN_NAME)
                 return
             }
