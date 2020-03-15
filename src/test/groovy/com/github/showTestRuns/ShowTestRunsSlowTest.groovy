@@ -14,31 +14,31 @@ class ShowTestRunsSlowTest extends Specification {
 
     def setup() {
         buildFile = tmp.newFile("build.gradle")
-        settingsFile = tmp.newFile("settings.gradle")
         buildFile << """
             plugins {
                 id "com.github.show-test-runs"
             }
+            task empty {}
         """
-        settingsFile << ""
+        settingsFile = tmp.newFile("settings.gradle")
+        settingsFile << "rootProject.name = 'show-test-runs-test'"
     }
 
-    def "test plugin loads"() {
-        given:
-        buildFile << """
-            showTestRuns { 
-                ignore = []
-            }
-        """
+    def cleanup() {
+        buildFile.delete()
+        settingsFile.delete()
+    }
 
-        when:
-        def project = GradleRunner.create()
+    def "plugin loads"() {
+        expect:
+        GradleRunner.create()
+                .withPluginClasspath()
+                .forwardOutput()
                 .withProjectDir(tmp.root)
-                .withArguments("test")
+                .withArguments("empty")
                 .build()
-        println(project)
-
-        then:
-        project.output.isEmpty()
+                .tasks
+                *.path
+                .contains(":empty")
     }
 }
