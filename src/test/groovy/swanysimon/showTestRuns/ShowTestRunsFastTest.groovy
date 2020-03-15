@@ -1,4 +1,4 @@
-package com.github.showTestRuns
+package swanysimon.showTestRuns
 
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel

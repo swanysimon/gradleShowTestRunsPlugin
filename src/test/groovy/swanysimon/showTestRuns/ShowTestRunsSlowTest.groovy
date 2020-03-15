@@ -1,4 +1,4 @@
-package com.github.showTestRuns
+package swanysimon.showTestRuns
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -10,10 +10,13 @@ import spock.lang.Unroll
 
 class ShowTestRunsSlowTest extends Specification {
 
-    static def GRADLE_VERSIONS = ["6.1.1"]
+    static def GRADLE_VERSIONS = [
+            "6.0.1",
+            "6.1.1",
+    ]
 
     @Rule TemporaryFolder tmp = new TemporaryFolder()
-    @Shared def buildFile
+    @Shared File buildFile
     @Shared def settingsFile
 
     def setup() {
@@ -52,38 +55,19 @@ class ShowTestRunsSlowTest extends Specification {
     }
 
     @Unroll
-    def "plugin loads with gradle version #gradleVersion"() {
+    def "plugin works with gradle version #gradleVersion"() {
         given:
         def runner = runner(gradleVersion).withArguments("pluginTest").build()
 
         expect:
         runner.task(":pluginTest").outcome == TaskOutcome.SUCCESS
         runner.output.lines().any { it =~ '^hello$' }
+        runner.output.lines().any { it =~ '^Test Results: SUCCESS 0 tests, 0 passed, 0 skipped, 0 failed$' }
 
         where:
         gradleVersion << GRADLE_VERSIONS
     }
 
-//    @Unroll
-//    def "plugin extension loads with gradle version #gradleVersion"() {
-//        given:
-//        buildFile << """
-//            showTestRuns {
-//                ignores += tasks.pluginTest
-//            }
-//        """
-//
-//        when:
-//        def runner = runner(gradleVersion).withArguments("pluginTest").build()
-//
-//        then:
-//        runner.tasks.every { it.outcome == TaskOutcome.SUCCESS }
-//        !("hello" in runner.output.contains)
-//
-//        where:
-//        gradleVersion << GRADLE_VERSIONS
-//    }
-//
     private GradleRunner runner(String gradleVersion) {
         return GradleRunner.create()
                 .withPluginClasspath()

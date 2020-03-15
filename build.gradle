@@ -2,10 +2,10 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-//    id "com.gradle.plugin-publish"
+    id "com.gradle.plugin-publish"
     id "groovy"
     id "java-gradle-plugin"
-//    id "maven-publish"
+    id "maven-publish"
 }
 
 repositories {
@@ -13,7 +13,7 @@ repositories {
 }
 
 version = "0.0.0"
-group = "com.github.showTestRuns"
+group = "swanysimon.showTestRuns"
 
 dependencies {
     testImplementation gradleApi()
@@ -51,23 +51,26 @@ tasks.withType(Test).configureEach {
 gradlePlugin {
     plugins {
         showTestRuns {
-            id = "com.github.show-test-runs"
-            implementationClass = "com.github.showTestRuns.ShowTestRunsPlugin"
+            id = "swanysimon.show-test-runs"
+            implementationClass = "swanysimon.showTestRuns.ShowTestRunsPlugin"
             description = "Increases console output during test runs."
         }
     }
 }
 
-//pluginBundle {
-//    website = "https://github.com/swanysimon/gradleShowTestRunsPlugin"
-//    vcsUrl = "https://github.com/swanysimon/gradleShowTestRunsPlugin.git"
-//    tags = ["testing"]
-//
-//    plugins {
-//        showTestRuns {
-//            displayName = "Show Test Runs plugin"
-//        }
-//    }
-//}
-//
-//tasks.named("publish").configure { it.dependsOn publishPlugins }
+pluginBundle {
+    website = "https://github.com/swanysimon/gradleShowTestRunsPlugin"
+    vcsUrl = "https://github.com/swanysimon/gradleShowTestRunsPlugin.git"
+    tags = ["testing"]
+
+    plugins {
+        showTestRuns {
+            displayName = "Show Test Runs plugin"
+        }
+    }
+}
+
+tasks.named("publishPlugins").configure {
+    onlyIf { System.env["gradle.publish.key"] && System.env["gradle.publish.secret"] }
+}
+tasks.named("publish").configure { it.dependsOn tasks.named("publishPlugins") }
