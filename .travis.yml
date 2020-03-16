@@ -1,0 +1,18 @@
+language: groovy
+
+groovy:
+  - '2.5'
+
+jdk:
+  - 'openjdk11'
+
+os: 'linux'
+
+install: true
+
+branches:
+  only:
+    - 'master'
+
+git:
+  quiet: true
