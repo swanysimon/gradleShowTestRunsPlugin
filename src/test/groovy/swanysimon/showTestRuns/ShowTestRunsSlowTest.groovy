@@ -32,7 +32,7 @@ class ShowTestRunsSlowTest extends Specification {
         buildFile << """
             plugins {
                 id "java"
-                id "com.github.show-test-runs"
+                id "swanysimon.show-test-runs"
             }
             
             task pluginTest(type: Test) {

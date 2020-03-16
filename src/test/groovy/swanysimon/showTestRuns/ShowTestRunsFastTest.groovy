@@ -20,7 +20,7 @@ class ShowTestRunsFastTest extends Specification {
         def tasks = project.getAllTasks(true).clone()
 
         when:
-        project.plugins.apply("com.github.show-test-runs")
+        project.plugins.apply("swanysimon.show-test-runs")
 
         then:
         project.getAllTasks(true) == tasks
@@ -32,7 +32,7 @@ class ShowTestRunsFastTest extends Specification {
         project.tasks.create("test2", Test)
 
         when:
-        project.plugins.apply("com.github.show-test-runs")
+        project.plugins.apply("swanysimon.show-test-runs")
 
         then:
         fromTestLogging(project) { "blank" }
@@ -48,7 +48,7 @@ class ShowTestRunsFastTest extends Specification {
         project.tasks.create("test", Test)
 
         when:
-        project.plugins.apply("com.github.show-test-runs")
+        project.plugins.apply("swanysimon.show-test-runs")
 
         then:
         fromTestLogging(project) { it.exceptionFormat }
@@ -62,7 +62,7 @@ class ShowTestRunsFastTest extends Specification {
         project.tasks.create("test", Test)
 
         when:
-        project.plugins.apply("com.github.show-test-runs")
+        project.plugins.apply("swanysimon.show-test-runs")
 
         then:
         fromTestLogging(project) { it.events }
