@@ -1,14 +1,29 @@
 language: groovy
-
 groovy:
   - '2.5'
-
 jdk:
-  - 'openjdk11'
-
-os: 'linux'
-
+  - openjdk11
+os: linux
 install: true
-
 git:
   quiet: true
+jobs:
+  include:
+    - stage: Resolve Dependencies
+      script: ./gradlew assemble
+    - stage: Compile
+      script: ./gradlew compileGroovy compileTestGroovy
+    - stage: Test
+      script: ./gradlew check
+    - stage: Publish
+      script: ./gradlew publish
+    - stage: Deploy
+      script: >
+        ./gradlew publishPlugins -Pgradle.publish.key="$GRADLE_PUBLISH_KEY" -Pgradle.publish.secret="$GRADLE_PUBLISH_SECRET"
+stages:
+  - name: Resolve Dependencies
+  - name: Compile
+  - name: Test
+  - name: Publish
+  - name: Deploy
+    if: tag IS present

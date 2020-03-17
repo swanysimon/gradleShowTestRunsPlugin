@@ -71,6 +71,9 @@ pluginBundle {
 }
 
 tasks.named("publishPlugins").configure {
-    onlyIf { System.env["gradle.publish.key"] && System.env["gradle.publish.secret"] }
+    onlyIf {
+        def rootProps = rootProject.properties
+        return rootProps["gradle.publish.key"] && rootProps["gradle.publish.secret"]
+    }
 }
 tasks.named("publish").configure { it.dependsOn tasks.named("publishPlugins") }
